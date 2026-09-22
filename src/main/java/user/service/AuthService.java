@@ -1,13 +1,13 @@
-package com.example.demo.service;
+package user.service;
 
-import com.example.demo.dto.request.LoginRequest;
-import com.example.demo.dto.request.RefreshTokenRequest;
-import com.example.demo.dto.request.RegisterRequest;
-import com.example.demo.dto.response.AuthResponse;
-import com.example.demo.dto.response.MessageResponse;
-import com.example.demo.entity.User;
-import com.example.demo.jwt.JwtService;
-import com.example.demo.repository.UserRepository;
+import user.dto.request.LoginRequest;
+import user.dto.request.RefreshTokenRequest;
+import user.dto.request.RegisterRequest;
+import user.dto.response.AuthResponse;
+import user.dto.response.MessageResponse;
+import user.jwt.JwtService;
+import user.storage.entity.User;
+import user.storage.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

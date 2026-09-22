@@ -1,9 +1,9 @@
-package com.example.demo.service;
+package user.service;
 
-import com.example.demo.dto.response.UserProfileResponse;
-import com.example.demo.entity.User;
-import com.example.demo.jwt.JwtService;
-import com.example.demo.repository.UserRepository;
+import user.dto.response.UserProfileResponse;
+import user.jwt.JwtService;
+import user.storage.entity.User;
+import user.storage.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
