@@ -5,7 +5,7 @@ import com.example.demo.user.dto.request.RefreshTokenRequest;
 import com.example.demo.user.dto.request.RegisterRequest;
 import com.example.demo.user.dto.response.AuthResponse;
 import com.example.demo.user.dto.response.MessageResponse;
-import com.example.demo.user.jwt.JwtService;
+import com.example.demo.jwt.JwtService;
 import com.example.demo.user.storage.entity.User;
 import com.example.demo.user.storage.repository.UserRepository;
 import org.springframework.http.HttpStatus;

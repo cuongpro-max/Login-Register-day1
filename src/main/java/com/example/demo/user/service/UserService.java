@@ -1,7 +1,7 @@
 package com.example.demo.user.service;
 
 import com.example.demo.user.dto.response.UserProfileResponse;
-import com.example.demo.user.jwt.JwtService;
+import com.example.demo.jwt.JwtService;
 import com.example.demo.user.storage.entity.User;
 import com.example.demo.user.storage.repository.UserRepository;
 import org.springframework.http.HttpStatus;
