@@ -20,19 +20,15 @@ public class User {
 
     private String phone;
 
-    @Column(name = "refresh_token")
-    private String refreshToken;
-
     public User() {
     }
 
-    public User(Long id, String username, String password, String name, String phone, String refreshToken) {
+    public User(Long id, String username, String password, String name, String phone) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.name = name;
         this.phone = phone;
-        this.refreshToken = refreshToken;
     }
 
     public Long getId() {
@@ -73,13 +69,5 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
     }
 }

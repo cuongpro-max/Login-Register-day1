@@ -1,11 +1,12 @@
 package com.example.demo.user.service;
 
+import com.example.demo.jwt.JwtService;
 import com.example.demo.user.dto.request.LoginRequest;
 import com.example.demo.user.dto.request.RefreshTokenRequest;
 import com.example.demo.user.dto.request.RegisterRequest;
 import com.example.demo.user.dto.response.AuthResponse;
 import com.example.demo.user.dto.response.MessageResponse;
-import com.example.demo.jwt.JwtService;
+import com.example.demo.user.storage.entity.RefreshToken;
 import com.example.demo.user.storage.entity.User;
 import com.example.demo.user.storage.repository.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class AuthService {
@@ -22,11 +22,16 @@ public class AuthService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final RefreshTokenService refreshTokenService;
 
-    public AuthService(UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder) {
+    public AuthService(UserRepository userRepository,
+                       JwtService jwtService,
+                       PasswordEncoder passwordEncoder,
+                       RefreshTokenService refreshTokenService) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
+        this.refreshTokenService = refreshTokenService;
     }
 
     // 1. Logic Đăng ký (Băm mật khẩu trước khi lưu DB)
@@ -42,10 +47,7 @@ public class AuthService {
 
         User user = new User();
         user.setUsername(request.getUsername());
-        
-        // Băm mật khẩu bằng BCrypt: $2a$10$...
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        
         user.setName(request.getName());
         user.setPhone(request.getPhone());
 
@@ -54,50 +56,45 @@ public class AuthService {
         return new MessageResponse("Đăng ký tài khoản thành công!");
     }
 
-    // 2. Logic Đăng nhập (Kiểm tra mật khẩu băm)
+    // 2. Logic Đăng nhập (Kiểm tra mật khẩu & lưu Refresh Token vào bảng riêng)
     public AuthResponse login(LoginRequest request) {
         Optional<User> userOptional = userRepository.findByUsername(request.getUsername());
 
-        // Kiểm tra user có tồn tại và password có khớp với chuỗi đã băm không
         if (userOptional.isEmpty() || !passwordEncoder.matches(request.getPassword(), userOptional.get().getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Sai tên đăng nhập hoặc mật khẩu!");
         }
 
         User user = userOptional.get();
 
-        // Tạo Access Token & Refresh Token
+        // Tạo Access Token (JWT - 15 phút)
         String accessToken = jwtService.generateAccessToken(user.getUsername());
-        String refreshToken = UUID.randomUUID().toString();
 
-        // Lưu Refresh Token vào Database
-        user.setRefreshToken(refreshToken);
-        userRepository.save(user);
+        // Tạo & Lưu Refresh Token vào bảng refresh_tokens (hạn 7 ngày)
+        String refreshToken = refreshTokenService.createRefreshToken(user);
 
         return new AuthResponse("Đăng nhập thành công!", accessToken, refreshToken);
     }
 
-    // 3. Logic Refresh Token
+    // 3. Logic Refresh Token (Tra cứu từ bảng refresh_tokens và kiểm tra hạn dùng)
     public AuthResponse refreshToken(RefreshTokenRequest request) {
         String token = request.getRefreshToken();
         if (token == null || token.trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Vui lòng cung cấp refreshToken!");
         }
 
-        User user = userRepository.findByRefreshToken(token)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Refresh Token không hợp lệ hoặc đã hết hạn!"));
+        RefreshToken verifiedRefreshToken = refreshTokenService.verifyExpiration(token);
+        User user = verifiedRefreshToken.getUser();
 
+        // Cấp Access Token mới
         String newAccessToken = jwtService.generateAccessToken(user.getUsername());
 
-        return new AuthResponse("Cấp mới Access Token thành công!", newAccessToken, user.getRefreshToken());
+        return new AuthResponse("Cấp mới Access Token thành công!", newAccessToken, verifiedRefreshToken.getToken());
     }
 
-    // 4. Logic Đăng xuất
+    // 4. Logic Đăng xuất (Xóa Refresh Token khỏi bảng refresh_tokens)
     public MessageResponse logout(RefreshTokenRequest request) {
         if (request.getRefreshToken() != null) {
-            userRepository.findByRefreshToken(request.getRefreshToken()).ifPresent(user -> {
-                user.setRefreshToken(null);
-                userRepository.save(user);
-            });
+            refreshTokenService.deleteByToken(request.getRefreshToken());
         }
         return new MessageResponse("Đăng xuất thành công!");
     }
