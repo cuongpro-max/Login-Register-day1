@@ -8,7 +8,7 @@ D:\Java\Login-Register\src\main\java\com\example\demo\dto\response\AuthResponse.
 D:\Java\Login-Register\src\main\java\com\example\demo\dto\response\MessageResponse.java
 D:\Java\Login-Register\src\main\java\com\example\demo\dto\response\UserProfileResponse.java
 D:\Java\Login-Register\src\main\java\com\example\demo\service\AuthService.java
-D:\Java\Login-Register\src\main\java\com\example\demo\service\jwt\JwtService.java
+D:\Java\Login-Register\src\main\java\com\example\demo\service\JwtService.java
 D:\Java\Login-Register\src\main\java\com\example\demo\service\UserService.java
 D:\Java\Login-Register\src\main\java\com\example\demo\storage\entity\User.java
 D:\Java\Login-Register\src\main\java\com\example\demo\storage\repository\UserRepository.java

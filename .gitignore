@@ -19,6 +19,24 @@
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+# Virtual machine crash logs
 hs_err_pid*
 replay_pid*
+
+# Maven target
+target/
+.mvn/
+
+# IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+.project
+.classpath
+.settings/
+
+# Environment variables (KHÔNG PUSH FILE NÀY LÊN GIT)
+.env
+.env.local
+.env.*.local
