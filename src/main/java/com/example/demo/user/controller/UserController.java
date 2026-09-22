@@ -1,7 +1,7 @@
-package user.controller;
+package com.example.demo.user.controller;
 
-import user.dto.response.UserProfileResponse;
-import user.service.UserService;
+import com.example.demo.user.dto.response.UserProfileResponse;
+import com.example.demo.user.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,4 +1,4 @@
-package user.dto.request;
+package com.example.demo.user.dto.request;
 
 public class RefreshTokenRequest {
     private String refreshToken;
