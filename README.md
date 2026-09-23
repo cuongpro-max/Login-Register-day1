@@ -1,18 +1,32 @@
-# Hướng Dẫn Test RESTful API (Dùng Postman / Bruno)
+# Hướng Dẫn Test RESTful API (Spring Boot + PostgreSQL)
 
-Dự án Spring Boot thuần, tối giản, không cấu hình rườm rà.
-
----
-
-## 1. Cấu hình Database
-Trong file [`src/main/resources/application.properties`](file:///d:/Java/Login-Register/src/main/resources/application.properties):
-- URL: `jdbc:postgresql://localhost:5432/login_demo_db`
-- Username: `postgres`
-- Password: `(để trống nếu dùng chế độ trust)`
+Dự án gồm 2 bảng riêng biệt (`users` và `refresh_tokens`), tích hợp bảo mật mật khẩu BCrypt, JWT Token, và Swagger UI.
 
 ---
 
-## 2. Danh sách API Test trên Postman / Bruno
+## 🚀 1. Swagger UI (Giao diện Test trực quan)
+Sau khi chạy ứng dụng, truy cập Swagger UI trực tiếp trên trình duyệt tại:
+👉 **`http://localhost:8080/swagger-ui/index.html`**
+
+*(Có sẵn nút **Authorize 🔒** để dán Access Token test trực tiếp trên trình duyệt)*
+
+---
+
+## ⚙️ 2. Cấu hình Biến Môi Trường (`.env`)
+Kiểm tra file [`.env`](file:///d:/Java/Login-Register/.env) ở thư mục gốc:
+```env
+SERVER_PORT=8080
+DB_URL=jdbc:postgresql://localhost:5432/login_demo_db
+DB_USERNAME=postgres
+DB_PASSWORD=
+JWT_SECRET=day-la-chuoi-secret-key-rat-dai-va-an-toan-cho-jwt-32bytes-123456
+JWT_EXPIRATION=900000
+JWT_REFRESH_EXPIRATION=604800000
+```
+
+---
+
+## 📡 3. Danh sách API Test trên Bruno / Postman
 
 ### 🔹 1. Đăng ký tài khoản (Register)
 - **Method & URL**: `POST http://localhost:8080/api/v1/auth/register`
@@ -42,7 +56,7 @@ Trong file [`src/main/resources/application.properties`](file:///d:/Java/Login-R
 {
   "message": "Đăng nhập thành công!",
   "accessToken": "eyJhbGciOi...",
-  "refreshToken": "e3a8904e-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  "refreshToken": "6483ffd3-908c-46d9-856a-e21c60c244f0"
 }
 ```
 
@@ -70,7 +84,7 @@ Trong file [`src/main/resources/application.properties`](file:///d:/Java/Login-R
 - **Body (JSON)**:
 ```json
 {
-  "refreshToken": "e3a8904e-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  "refreshToken": "6483ffd3-908c-46d9-856a-e21c60c244f0"
 }
 ```
 - **Response**:
@@ -88,6 +102,6 @@ Trong file [`src/main/resources/application.properties`](file:///d:/Java/Login-R
 - **Body (JSON)**:
 ```json
 {
-  "refreshToken": "e3a8904e-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  "refreshToken": "6483ffd3-908c-46d9-856a-e21c60c244f0"
 }
 ```
